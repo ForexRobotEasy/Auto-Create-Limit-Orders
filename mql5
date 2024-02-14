@@ -1,0 +1,54 @@
+
+// Auto Create Limit Orders
+// Developer: Forex Robot Easy Team
+// Website: forexroboteasy.com
+
+// Import necessary libraries
+#include <Trade\Trade.mqh>
+
+// Define the class for the trading robot
+class AutoCreateLimitOrders
+{
+   private:
+      double lotSize; // Lot size for the limit order
+      double stopLoss; // Stop loss level for the limit order
+      double takeProfit; // Take profit level for the limit order
+   
+   public:
+      // Constructor to initialize the parameters
+      AutoCreateLimitOrders(double _lotSize, double _stopLoss, double _takeProfit)
+      {
+         lotSize = _lotSize;
+         stopLoss = _stopLoss;
+         takeProfit = _takeProfit;
+      }
+      
+      // Function to create a limit order
+      void createLimitOrder(string symbol, double price)
+      {
+         // Calculate the stop loss and take profit levels based on the given price
+         double sl = price - stopLoss;
+         double tp = price + takeProfit;
+         
+         // Open the limit order with the specified parameters
+         CTrade trade;
+         trade.BuyLimit(lotSize, symbol, price, sl, tp);
+      }
+};
+
+// Entry point of the program
+void OnStart()
+{
+   // Create an instance of the AutoCreateLimitOrders class
+   AutoCreateLimitOrders robot(0.01, 20, 30);
+   
+   // Define the symbol and price for the limit order
+   string symbol = 'EURUSD';
+   double price = 1.2000;
+   
+   // Create the limit order
+   robot.createLimitOrder(symbol, price);
+   
+   // Display a message indicating the successful creation of the limit order
+   Print('Limit order created successfully for symbol', symbol, 'at price', price);
+}
